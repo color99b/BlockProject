@@ -23,6 +23,7 @@ function App() {
 }
 
 const Body = styled.div`
-  padding: 1rem 5rem 5rem 5rem;
+  // padding: 1rem 5rem 5rem 5rem;
+  font-family: "sans-serif";
 `;
 export default App;
