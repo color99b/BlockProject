@@ -34,3 +34,13 @@
 3. DarkMode
 
 - 다크 모드를 하려고하니 만들어놓은 틀에서 배경색을 바꾸는데 id를 하나하나 찾아야 되는 지경에 이르렀다. 제일 최상위 page에서 모드 선택시 probs로 하위 container들에게 전달하여 전달한 내용(light, dark) 에 따라 색상을 설정하도록 해야겠다. -> probs에 probs 타고 보기 복잡해질 게 분명하니 redux를 사용하도록 하자.
+
+4. 날짜출력
+
+- DB에 created_at column에는 자동으로 시간이 들어가는데 2023-02-20 06:04:36 db에서는 이렇지만 front에서 출력하면 2023-02-20T06:04:36.000Z 라고 나오는 것을 볼 수 있다. 원하는 날짜 포맷으로 변경하는데 어려움을 겪었다.
+  - 해결 : 새로운 Date 객체의 인자로 전달하고, 새로 만들어진 객체를 toLocaleString 및 toString나 custom으로 포맷을 변경한다.
+  ```js
+  {
+    new Date(element.createdAt).toLocaleString();
+  }
+  ```

@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import LineChart from "../components/Chart";
 import etherSmall from "../imgs/ethereum-original.svg";
-
+import blockICON from "../imgs/block.gif";
 import speed from "../imgs/speed.svg";
 import trans from "../imgs/trans.svg";
 import internet from "../imgs/internet.svg";
 import { useState } from "react";
 
-const BlockBoxComponent = () => {
+const BlockBoxComponent = ({ blockArr, setblockArr }) => {
+  console.log(blockArr);
+  // console.log(new Date(blockArr[0].createdAt).toTimeString().split(" ")[0]);
   return (
     <Main>
       <BlockBox>
@@ -75,9 +77,56 @@ const BlockBoxComponent = () => {
       </BlockBox>
       <BottomBlockBox>
         <VblockBox>
-          <Fbox>Latest Blocks</Fbox>
-          <Fbox></Fbox>
-          <Fbox>VIEW ALL BLOCKS →</Fbox>
+          <ViewBlockTitle>Latest Blocks</ViewBlockTitle>
+          {blockArr.map((element, index) => {
+            return (
+              <ViewBlockBox key={index}>
+                <Fbox>
+                  <img src={blockICON} alt="" srcset="" />
+                  <Vbox>
+                    <div>
+                      <Blue>{element.number}</Blue>{" "}
+                    </div>
+                    <div>{new Date(element.createdAt).toLocaleString()}</div>
+                  </Vbox>
+                </Fbox>
+                <Vbox>
+                  <div>
+                    Fee Recipient <Blue>Flashbots: Builder</Blue>
+                  </div>
+                  <div>
+                    <Blue>146 txns</Blue> in 12 secs
+                  </div>
+                </Vbox>
+                <ButtonBox>
+                  <ButtnDiv>{element.difficulty} dif</ButtnDiv>
+                </ButtonBox>
+              </ViewBlockBox>
+            );
+          })}
+          {/* <ViewBlockBox>
+            <Fbox>
+              <img src={blockICON} alt="" srcset="" />
+              <Vbox>
+                <div>
+                  <Blue>166666121</Blue>{" "}
+                </div>
+                <div>11 seec ago</div>
+              </Vbox>
+            </Fbox>
+            <Vbox>
+              <div>
+                Fee Recipient <Blue>Flashbots: Builder</Blue>
+              </div>
+              <div>
+                <Blue>146 txns</Blue> in 12 secs
+              </div>
+            </Vbox>
+            <ButtonBox>
+              <ButtnDiv>0.03774 Eth</ButtnDiv>
+            </ButtonBox>
+          </ViewBlockBox> */}
+          <ViewAll>VIEW ALL BLOCKS →</ViewAll>
         </VblockBox>
         <VblockBox>
           <Fbox>Latest Transactions</Fbox>
@@ -137,6 +186,45 @@ const Fbox = styled.div`
   border-radius: 10px;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const ViewAll = styled.div`
+  display: flex;
+
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 1rem;
+  color: rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  box-shadow: 1px 6px 15px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.03);
+`;
+
+const ViewBlockBox = styled.div`
+  display: flex;
+  width: 92%;
+  justify-content: space-between;
+  > div > img {
+    width: 3rem;
+  }
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+`;
+
+const ViewBlockTitle = styled.div`
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  text-align: left;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
 `;
 
 const BottomBlockBox = styled.div`
@@ -149,7 +237,7 @@ const BottomBlockBox = styled.div`
   box-sizing: border-box;
   font-size: 0.8rem;
   > div {
-    padding: 1rem;
+    // padding: 1rem;
   }
 `;
 const BlockBox = styled.div`
@@ -181,8 +269,11 @@ const VblockBox = styled.div`
   justify-content: center;
   wrap: no-wrap;
   align-items: center;
-  gap: 5rem;
+  gap: 1rem;
   background-color: white;
+  > div:nth-child(6) {
+    border: none;
+  }
 `;
 
 const Vbox = styled.div`
@@ -216,5 +307,24 @@ const ImgBox = styled.div`
     width: 2rem;
     height: 2rem;
   }
+`;
+
+const Blue = styled.span`
+  color: rgb(7, 132, 195);
+`;
+
+const ButtnDiv = styled.div`
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 0.2rem 0.5rem;
+  white-space: pre;
+  font-size: 0.7rem;
+  font-weight: bold;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 export default BlockBoxComponent;

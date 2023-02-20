@@ -124,7 +124,8 @@ const SubTitle = styled.div`
 `;
 
 const LinkSpan = styled.span`
-  color: blue;
+  color: rgba(7, 155, 255, 1);
+  font-weight: bold;
 `;
 
 const AdBox = styled.div`

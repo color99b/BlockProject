@@ -7,8 +7,9 @@ const process = require("process");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
-const Board = require("./board");
-const db = { Board };
+const Block = require("./block");
+const Transaction = require("./transaction");
+const db = { Block, Transaction };
 
 let sequelize;
 if (config.use_env_variable) {
@@ -22,7 +23,8 @@ if (config.use_env_variable) {
   );
 }
 
-Board.init(sequelize);
+Block.init(sequelize);
+Transaction.init(sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
