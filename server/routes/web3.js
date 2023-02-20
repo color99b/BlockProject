@@ -14,8 +14,10 @@ router.post("/getBlock", async (req, res) => {
   });
   // const filter = web3.eth.filter("latest");
   web3.eth.subscribe("newBlockHeaders", (error, result) => {
+    console.log("newBlockHeaders : ", result);
+
     if (!error) {
-      // console.log("newBlockHeaders : ", result);
+      console.log("newBlockHeaders : ", result);
     } else {
       return console.log("블록이 없습니다.");
     }
@@ -29,28 +31,67 @@ router.post("/getBlock", async (req, res) => {
   }
 });
 
-web3.eth.getBlockNumber(function (err, rtn) {
+web3.eth.getBlockNumber(async function (err, rtn) {
   let latest_block_number = rtn;
-  for (let i = 0; i <= latest_block_number; i++) {
-    web3.eth.getBlock(i, false, async function (err, block) {
-      if (block.transactions[0]) {
-        block.transactions = block.transactions[0];
-        // await Transaction.create({ transaction: block.transactions });
-      } else {
-        block.transactions = "";
-      }
-      await Block.create(block);
-      web3.eth.getBlockTransactionCount(i, true, function (err, cnt) {
-        if (cnt > 0) {
-          for (let j = 0; j < cnt; j++) {
-            web3.eth.getTransactionFromBlock(i, j, async function (err, tx) {
-              await Transaction.create(tx);
-              console.log(tx);
-            });
-          }
-        }
-      });
+  const temp = await Block.findOne({ id: 1 });
+  console.log("temp", temp);
+
+  if (temp) {
+    console.log("걸렸다");
+
+    const lastBlock = await Block.findOne({
+      order: [["number", "desc"]],
     });
+    const lastBlockNum = lastBlock.dataValues.number;
+
+    console.log("lastBlockNum", lastBlockNum);
+    console.log("rtn", rtn);
+
+    for (let i = lastBlockNum + 1; i <= latest_block_number; i++) {
+      web3.eth.getBlock(i, false, async function (err, block) {
+        if (block.transactions[0]) {
+          block.transactions = block.transactions[0];
+          // await Transaction.create({ transaction: block.transactions });
+        } else {
+          block.transactions = "";
+        }
+        await Block.create(block);
+        web3.eth.getBlockTransactionCount(i, true, function (err, cnt) {
+          if (cnt > 0) {
+            for (let j = lastBlockNum + 1; j < cnt; j++) {
+              web3.eth.getTransactionFromBlock(i, j, async function (err, tx) {
+                await Transaction.create(tx);
+                console.log(tx);
+              });
+            }
+          }
+        });
+      });
+    }
+  } else {
+    console.log("안걸렸다");
+
+    for (let i = 0; i <= latest_block_number; i++) {
+      web3.eth.getBlock(i, false, async function (err, block) {
+        if (block.transactions[0]) {
+          block.transactions = block.transactions[0];
+          // await Transaction.create({ transaction: block.transactions });
+        } else {
+          block.transactions = "";
+        }
+        await Block.create(block);
+        web3.eth.getBlockTransactionCount(i, true, function (err, cnt) {
+          if (cnt > 0) {
+            for (let j = 0; j < cnt; j++) {
+              web3.eth.getTransactionFromBlock(i, j, async function (err, tx) {
+                await Transaction.create(tx);
+                console.log(tx);
+              });
+            }
+          }
+        });
+      });
+    }
     // await Block.create(block);
     // console.log(block);
     // web3.eth.getBlock(i, false, async function (err, block) {
@@ -72,6 +113,6 @@ web3.eth.getBlockNumber(function (err, rtn) {
   }
 });
 
-web3.eth.getAccounts().then((data) => console.log(data));
+// web3.eth.getAccounts().then((data) => console.log(data));
 // web3.eth.getBlock().then(console.log);
 module.exports = router;
