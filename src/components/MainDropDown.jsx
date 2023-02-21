@@ -52,6 +52,7 @@ const Main = styled.div`
   > div > img {
     width: 10rem;
   }
+  box-shadow: 0 10px 30px 0.1px rgba(0, 0, 0, 0.1);
 `;
 
 const Fbox = styled.div`

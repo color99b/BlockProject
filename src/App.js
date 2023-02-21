@@ -5,18 +5,18 @@ import AddBoardContainer from "./containers/AddBoard";
 import HeaderContainer from "./containers/Header";
 import { Link, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
+import ViewAllPage from "./pages/ViewAllPage";
 function App() {
   return (
     <div className="App">
-      {/* <Routes>
-        <Route
-          path="/new"
-          element={<AddBoardContainer>asdasd</AddBoardContainer>}
-        />
-      </Routes> */}
       <Body>
         <HeaderContainer></HeaderContainer>
-        <MainPage></MainPage>
+
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+
+          <Route path="/viewblock" element={<ViewAllPage />} />
+        </Routes>
       </Body>
     </div>
   );

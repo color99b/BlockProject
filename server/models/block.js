@@ -85,4 +85,11 @@ module.exports = class Block extends Sequelize.Model {
       }
     );
   }
+
+  static associate(db) {
+    db.Block.hasMany(db.Transaction, {
+      foreignKey: "number",
+      sourceKey: "id",
+    });
+  }
 };

@@ -1,3 +1,71 @@
+# wsl2
+
+1. 서버열기  
+   1-1. server index 작성 및 cros로 react 연동  
+   1-2. api routes로 web3 연결  
+   1-3. ubuntu에서 geth를 node-vs 버전에 따라 실행문을 다르게 실행한다.
+
+   ```sh
+   #18.12
+   geth --datadir ~/myGeth  --ws.api "admin,miner,txpool,web3,personal,eth,net" --allow-insecure-unlock --syncmode full --networkid 50 --ws --ws.port 8081 --ws.addr "0.0.0.0" --ws.origins "*" console
+   ```
+
+   ```sh
+   #16.18
+   geth --datadir ~/myGeth --ws.api "admin,miner,txpool,web3,personal,eth,net" --allow-insecure-unlock --syncmode full --networkid 50 --ws --ws.port 8081 --ws.origins "*" console
+   ```
+
+2. 계정 잠금 해제하기  
+   2-1. 서버를 열어둔 wsl 과 다른 창 하나를 더 켠다.  
+   2-2. 계정관리를 위해 geth attach로 열어둔 서버 port에 접속한다.
+
+   ```sh
+   #단방향
+   geth attach http://localhost:{portNumber}
+   ```
+
+   ```sh
+   #Web3 (웹소켓)
+   geth attach ws://localhost:{portNumber}
+   ```
+
+   2-3. 아래 문구를 입력하여 원하는 계정의 unlock을 진행한다.
+
+   ```sh
+   #eth.accounts() 의 0번째
+   personal.unlockAccount(eth.accounts[0])
+   ```
+
+3. 채굴하기  
+   3-1. 채굴 보상을 받을 계정을 먼저 선택한다.
+
+   ```sh
+   #eth.accounts() 의 0번째
+   miner.setEtherbase(eth.accounts[0])
+   ```
+
+   3-2. 채굴을 시작한다.
+
+   ```sh
+   miner.start()
+   ```
+
+   3-3. 채굴을 종료한다.
+
+   ```sh
+   miner.stop()
+   ```
+
+4. 송금하기 (Transaction 생성)
+
+- 계정 unlock 이 필수로 선행되어야 한다.
+
+  4-1. 어떤계정에서 어떤계정으로 얼마나 보낼지를 작성한다.
+
+  ```sh
+  eth.sendTransaction({from:"" , to:"", value:""})
+  ```
+
 # CSS
 
 1.
@@ -14,7 +82,10 @@
     ),
     url(${pattern});
   ```
-  왼쪽부터 시작해서 width 10%까지는 rgba 1번째로, 70%까지는 rgba 2번째로, 마지막은 rgba 3번째로 색을 점진적으로 채워나가는 것인데, 하위 컴포넌트와 상관없이 독립적으로 투명도 조절이 가능하다.
+
+````
+
+왼쪽부터 시작해서 width 10%까지는 rgba 1번째로, 70%까지는 rgba 2번째로, 마지막은 rgba 3번째로 색을 점진적으로 채워나가는 것인데, 하위 컴포넌트와 상관없이 독립적으로 투명도 조절이 가능하다.
 
 2.
 
@@ -44,3 +115,14 @@
     new Date(element.createdAt).toLocaleString();
   }
   ```
+````
+
+# DataBase(Mysql2)
+
+- react의 useEffect를 통해 페이지를 새로 불러올때마다 ( 새로고침 할 때마다 ) mining 된 block 및 transaction 을 가져오는 코드를 구성했다.
+  - db에 data가 없을 때 : 모든 정보를 입력한다.
+  - db에 data가 있을 때 : db의 마지막 블록 number(height)와 채굴된 마지막 block의 number(height)를 비교하여 같으면 바로 return, 다르면 새로 추가된 block 추가
+- 위처럼 구조를 작성했지만 useEffect(()=>{},[]) 시 2번씩 실행되어 처음 서버를 열면 data가 2개씩 들어가는 현상 발생
+
+- 해결 : react에는 src/index.js 에서 strictmode 태그로 기본적으로 감싸져 생성되는데 React.StrictMode 는 오류를 잘 잡아내기 위해 두 번씩 lendering을 한다고 한다.
+  StrictMode 태그를 지움으로써 해결.

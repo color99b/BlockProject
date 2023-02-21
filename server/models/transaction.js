@@ -7,6 +7,12 @@ module.exports = class Transaction extends Sequelize.Model {
         blockNumber: {
           type: Sequelize.STRING(200),
         },
+        hash: {
+          type: Sequelize.STRING(200),
+        },
+        blockHash: {
+          type: Sequelize.STRING(200),
+        },
         from: {
           type: Sequelize.STRING(200),
         },
@@ -44,5 +50,12 @@ module.exports = class Transaction extends Sequelize.Model {
         timestamps: true,
       }
     );
+  }
+
+  static associate(db) {
+    db.Transaction.belongsTo(db.Block, {
+      foreignKey: "number",
+      targetKey: "id",
+    });
   }
 };

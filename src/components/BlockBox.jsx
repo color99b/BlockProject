@@ -5,10 +5,12 @@ import blockICON from "../imgs/block.gif";
 import speed from "../imgs/speed.svg";
 import trans from "../imgs/trans.svg";
 import internet from "../imgs/internet.svg";
+import transGif from "../imgs/trans.gif";
+
 import { useState } from "react";
 
-const BlockBoxComponent = ({ blockArr, setblockArr }) => {
-  console.log(blockArr);
+const BlockBoxComponent = ({ blockArr, transactionArr }) => {
+  console.log(transactionArr);
   // console.log(new Date(blockArr[0].createdAt).toTimeString().split(" ")[0]);
   return (
     <Main>
@@ -81,7 +83,7 @@ const BlockBoxComponent = ({ blockArr, setblockArr }) => {
           {blockArr.map((element, index) => {
             return (
               <ViewBlockBox key={index}>
-                <Fbox>
+                <FboxLeft>
                   <img src={blockICON} alt="" srcset="" />
                   <Vbox>
                     <div>
@@ -89,49 +91,60 @@ const BlockBoxComponent = ({ blockArr, setblockArr }) => {
                     </div>
                     <div>{new Date(element.createdAt).toLocaleString()}</div>
                   </Vbox>
+                </FboxLeft>
+                <Fbox>
+                  <Vbox>
+                    <div>
+                      Fee Recipient <Blue>Flashbots: Builder</Blue>
+                    </div>
+                    <div>
+                      <Blue>146 txns</Blue> in 12 secs
+                    </div>
+                  </Vbox>
+                  <ButtonBox>
+                    <ButtnDiv>{element.difficulty} dif</ButtnDiv>
+                  </ButtonBox>
                 </Fbox>
-                <Vbox>
-                  <div>
-                    Fee Recipient <Blue>Flashbots: Builder</Blue>
-                  </div>
-                  <div>
-                    <Blue>146 txns</Blue> in 12 secs
-                  </div>
-                </Vbox>
-                <ButtonBox>
-                  <ButtnDiv>{element.difficulty} dif</ButtnDiv>
-                </ButtonBox>
               </ViewBlockBox>
             );
           })}
-          {/* <ViewBlockBox>
-            <Fbox>
-              <img src={blockICON} alt="" srcset="" />
-              <Vbox>
-                <div>
-                  <Blue>166666121</Blue>{" "}
-                </div>
-                <div>11 seec ago</div>
-              </Vbox>
-            </Fbox>
-            <Vbox>
-              <div>
-                Fee Recipient <Blue>Flashbots: Builder</Blue>
-              </div>
-              <div>
-                <Blue>146 txns</Blue> in 12 secs
-              </div>
-            </Vbox>
-            <ButtonBox>
-              <ButtnDiv>0.03774 Eth</ButtnDiv>
-            </ButtonBox>
-          </ViewBlockBox> */}
           <ViewAll>VIEW ALL BLOCKS →</ViewAll>
         </VblockBox>
         <VblockBox>
-          <Fbox>Latest Transactions</Fbox>
-          <Fbox></Fbox>
-          <Fbox>VIEW ALL Transactions →</Fbox>
+          <ViewBlockTitle>Latest Transactions</ViewBlockTitle>
+          {transactionArr.map((element, index) => {
+            return (
+              <ViewBlockBox key={index}>
+                <FboxLeft>
+                  <img src={transGif} alt="" srcset="" />
+                  <Vbox>
+                    <div>
+                      <Blue>{element.blockHash.slice(0, 25)}...</Blue>{" "}
+                    </div>
+                    <div>{new Date(element.createdAt).toLocaleString()}</div>
+                  </Vbox>
+                </FboxLeft>
+                <Fbox>
+                  <FromTo>
+                    From
+                    <div>
+                      {" "}
+                      <Blue>→ {element.from.slice(0, 25)}...</Blue>{" "}
+                    </div>
+                    To
+                    <div>
+                      {" "}
+                      <Blue> ← {element.to.slice(0, 25)}...</Blue>
+                    </div>
+                  </FromTo>
+                  <ButtonBox>
+                    <ButtnDiv>{element.value} Eth</ButtnDiv>
+                  </ButtonBox>
+                </Fbox>
+              </ViewBlockBox>
+            );
+          })}
+          <ViewAll>VIEW ALL BLOCKS →</ViewAll>
         </VblockBox>
       </BottomBlockBox>
     </Main>
@@ -185,6 +198,13 @@ const Fbox = styled.div`
   display: flex;
   border-radius: 10px;
   width: 100%;
+  justify-content: space-between;
+  align-items: center;
+`;
+const FboxLeft = styled.div`
+  display: flex;
+  border-radius: 10px;
+  width: 90%;
   justify-content: space-between;
   align-items: center;
 `;
@@ -266,12 +286,12 @@ const VblockBox = styled.div`
   border-radius: 10px;
   flex-direction: column;
   width: 100%;
-  justify-content: center;
+  justify-content: space-between;
   wrap: no-wrap;
   align-items: center;
   gap: 1rem;
   background-color: white;
-  > div:nth-child(6) {
+  > div:nth-last-child(2) {
     border: none;
   }
 `;
@@ -284,6 +304,24 @@ const Vbox = styled.div`
   > div {
     margin-bottom: 0.3rem;
   }
+`;
+
+const FromTo = styled.div`
+  display: flex;
+  flex-direction: column;
+  // width: 100%;
+  margin: 0.7rem;
+  > div {
+    margin-bottom: 0.3rem;
+  }
+  // justify-content: center;
+  // align-items: center;
+
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  // text-align: center;
 `;
 
 const VboxRight = styled.div`
@@ -327,4 +365,19 @@ const ButtonBox = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const From = styled.div`
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+`;
+
+const To = styled.div`
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
+
 export default BlockBoxComponent;
