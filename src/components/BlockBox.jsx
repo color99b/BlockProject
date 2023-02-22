@@ -87,7 +87,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                   <img src={blockICON} alt="" srcset="" />
                   <Vbox>
                     <div>
-                      <Blue>{element.number}</Blue>{" "}
+                      <Blue>
+                        <Move href={"info/?block=" + element.number.toString()}>
+                          {element.number}
+                        </Move>
+                      </Blue>{" "}
                     </div>
                     <div>{new Date(element.createdAt).toLocaleString()}</div>
                   </Vbox>
@@ -119,7 +123,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                   <img src={transGif} alt="" srcset="" />
                   <Vbox>
                     <div>
-                      <Blue>{element.blockHash.slice(0, 25)}...</Blue>{" "}
+                      <Move
+                        href={"info?transaction=" + element.hash.toString()}
+                      >
+                        <Blue>{element.hash.slice(0, 25)}...</Blue>{" "}
+                      </Move>
                     </div>
                     <div>{new Date(element.createdAt).toLocaleString()}</div>
                   </Vbox>
@@ -378,6 +386,11 @@ const To = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+`;
+
+const Move = styled.a`
+  text-decoration: none;
+  color: inherit;
 `;
 
 export default BlockBoxComponent;

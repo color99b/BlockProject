@@ -97,14 +97,70 @@ const getBlockFunc = () =>
     }
   });
 
+router.post("/getInfo", async (req, res) => {
+  try {
+    switch (req.body.type) {
+      case "block":
+        const blockInfo = await Block.findOne({
+          where: { number: req.body.value },
+        });
+        res.send({
+          isError: false,
+          info: blockInfo,
+        });
+        console.log(blockInfo);
+        break;
+
+      case "transaction":
+        const transactionInfo = await Transaction.findOne({
+          where: { hash: req.body.value },
+        });
+        res.send({
+          isError: false,
+          info: transactionInfo,
+        });
+        break;
+
+      default:
+        break;
+    }
+  } catch (error) {
+    res.send({ isError: true });
+  }
+});
+
 router.post("/getList", async (req, res) => {
-  const blockArr = await Block.findAll({ order: [["number", "desc"]] });
+  // let pageNum = req.query.page;
+  // console.log("pageNum", pageNum);
+  console.log(req.body.viewCount);
+  let pageNum = req.body.num;
+  let offset = 0;
+  if (pageNum > 1) {
+    offset = 20 * (pageNum - 1);
+  }
+
+  const blockArrLength = await Block.count();
+  const transactionArrLength = await Transaction.count();
+  const blockArr = await Block.findAll({
+    order: [["number", "desc"]],
+    offset: offset,
+    limit: req.body.viewCount,
+  });
+
   const transactionArr = await Transaction.findAll({
     order: [["blockNumber"], ["transactionIndex"]],
+    offset: offset,
+    limit: req.body.viewCount,
   });
 
   try {
-    res.send({ isError: false, arr: blockArr, transaction: transactionArr });
+    res.send({
+      isError: false,
+      arr: blockArr,
+      transaction: transactionArr,
+      blockLength: blockArrLength,
+      transactionArrLength: transactionArrLength,
+    });
   } catch (error) {
     res.send({ isError: true });
   }

@@ -119,10 +119,218 @@
 
 # DataBase(Mysql2)
 
-- react의 useEffect를 통해 페이지를 새로 불러올때마다 ( 새로고침 할 때마다 ) mining 된 block 및 transaction 을 가져오는 코드를 구성했다.
-  - db에 data가 없을 때 : 모든 정보를 입력한다.
-  - db에 data가 있을 때 : db의 마지막 블록 number(height)와 채굴된 마지막 block의 number(height)를 비교하여 같으면 바로 return, 다르면 새로 추가된 block 추가
+1. react의 useEffect를 통해 페이지를 새로 불러올때마다 ( 새로고침 할 때마다 ) mining 된 block 및 transaction 을 가져오는 코드를 구성했다.
+
+- db에 data가 없을 때 : 모든 정보를 입력한다.
+- db에 data가 있을 때 : db의 마지막 블록 number(height)와 채굴된 마지막 block의 number(height)를 비교하여 같으면 바로 return, 다르면 새로 추가된 block 추가
 - 위처럼 구조를 작성했지만 useEffect(()=>{},[]) 시 2번씩 실행되어 처음 서버를 열면 data가 2개씩 들어가는 현상 발생
 
 - 해결 : react에는 src/index.js 에서 strictmode 태그로 기본적으로 감싸져 생성되는데 React.StrictMode 는 오류를 잘 잡아내기 위해 두 번씩 lendering을 한다고 한다.
   StrictMode 태그를 지움으로써 해결.
+
+2. block 의 전체 list를 출력할 때 몇 백개가 될 수도 그 이상이 될 수도 있는 data를 한 화면에 아래로만 쫙 보여줄 수 없어서 pagination 이 필요했다.
+
+- 해결 : sequelize 의 offset과 limit를 통해 한 페이지에 보여줄 개수를 정할 수 있다.
+
+```sh
+let pageNum = req.query.page; // 요청 페이지 넘버
+let offset = 0;
+
+if(pageNum > 1){
+offset = 7 * (pageNum - 1);
+}
+
+[모델명].post.findAll({
+// pagination
+offset: offset,
+limit: 7
+})
+```
+
+# React
+
+1. styled-component에서의 가상클래스 활용
+
+- 해결: & 자기선택자 활용
+  .css 파일에서는 클래스이름이 예를 들어 temp 라면 아래와 같은데
+
+  ```css
+  .temp{
+    ~~~
+  }
+  .temp:after{
+
+  }
+
+  .temp:before{
+
+  }
+  ```
+
+  styled-component에서는 간단하게 이렇게 표현할 수있다.
+
+  ```jsx
+  const tempDiv = styled.div`
+    ~~~
+    &:after{
+      ~~~
+    }
+    &:before{
+      ~~~
+    }
+  `;
+  ```
+
+2. react의 장점인 코드를 재사용하면서 css만 살짝씩 변화주고 싶었는데 .css 파일을 만드는 방법 외에 다른 방법이 필요했다.
+
+- 해결 : 아래와 같이 속성명: 후 ${()=> return } 콜백함수의 return값을 통하여 원하는 값으로 변경할 수 있다.
+  ()의 매개변수는 probs만을 가져올 수 있으므로 redux를 사용하거나 probs에 수치를 미리 전달받아 처음 렌더링할때 생성되는 구조이다.
+  단 여기서의 probs는 당연하게도 전체 container가 아닌 ~~~.div 로 생성된 ~~~에게 직접 전달된 probs를 의미한다.
+  // 나는 container의 probs인줄알고 냅다 그냥 쓰다가 곤욕을 겪었다.
+
+  ```css
+  ~~~.div`
+    padding: ${(probs) => {
+        console.log("probs", probs);
+        return probs + "rem";
+      }}
+      0.5rem;
+      `
+  ```
+
+3. block과 transaction들을 쭉 나열했는데, 해당 블록이나 transaction을 클릭했을때 하나하나의 상세 정보를 띄워야했다. 하지만 그 하나하나의 정보를 어떻게 가져오고, 만들어둔 page에 주소가 다르게끔 출력을 할지 막혔다.
+
+- 해결 :
+
+  1. 해당 block이나 transaction를 <a></a>로 감싸고, 이동할때 href 를 block or transaction + "고유값" 으로 설정한다.
+
+  ```jsx
+  <Move href={"info/?block=" + element.number.toString()}>
+    {element.number}
+  </Move>
+  ```
+
+  2. 이동한 infoPage 에서 useLocation을 통해 (block인지 transaction인지) 와 (고유값) 을 가져온다.
+
+  ```jsx
+  const location = useLocation();
+  const typeArr = location.search.split("=");
+  const type = typeArr[0].slice(1);
+  const typeNum = typeArr[1];
+  ```
+
+  이때 useLocation으로 초기화한 location은 아래와 같이 나오기에 위에서 "="기준으로 잘라주고 tpye은 "?" 있을지 없을지 모른다는 ?를 하나 자르고 할당해줬다.
+
+  ```sh
+    {pathname: '/info/', search: '?block=20', hash: '', state: null, key: 'default'}
+  ```
+
+4. axios를 통해 db에서 데이터를 가져오고, 가져온 값을 토대로 component값을 뽑는데, 블록과 transaction 배열을 가져와 map 돌리는건 정상적으로 되는 반면 (배열을 가져온 후 rendering이 됨), 하나의 정보만 가져와서 component에 바로 입력하려고 하면 rendering이 먼저되고 나서 정보를 가져온다.  
+   -> 해결 : 원리는 모르지만 해결방법 가져온 데이터가 있으면 componet를 아니면 빈태그를 추가하는 구문으로 대체한다.
+
+   ```jsx
+   //원래 오류난 코드
+   <~~~Component probs={probs}>
+   //고친 코드
+   {data? <~~~Component probs={probs}> : <></>}
+   ```
+
+- 우선 정상적으로 되는 경우
+
+  arr를 뽑아오는 container
+
+  ```js
+  useEffect(() => {
+    // setBlock(await axios.post("web3/getBlock"));
+    async function getBlock() {
+      const data = await request.post("/web3/getBlock");
+      setBlockArr(data.data.arr);
+      setTransactionArr(data.data.transaction);
+    }
+    getBlock();
+  }, []);
+  return (
+    <BlockBoxComponent blockArr={blockArr} transactionArr={transactionArr} />
+  );
+  ```
+
+  probs로 받은 arr를 뽑아내는 component
+
+  ```jsx
+  <VblockBox>
+    <ViewBlockTitle>Latest Blocks</ViewBlockTitle>
+    {blockArr.map((element, index) => {
+      return (
+        <ViewBlockBox key={index}>
+          <FboxLeft>
+            <img src={blockICON} alt="" srcset="" />
+            <Vbox>
+              <div>
+                <Blue>
+                  <Move href={"info/?block=" + element.number.toString()}>
+                    {element.number}
+                  </Move>
+                </Blue>{" "}
+              </div>
+              <div>{new Date(element.createdAt).toLocaleString()}</div>
+            </Vbox>
+          </FboxLeft>
+          <Fbox>
+            <Vbox>
+              <div>
+                Fee Recipient <Blue>Flashbots: Builder</Blue>
+              </div>
+              <div>
+                <Blue>146 txns</Blue> in 12 secs
+              </div>
+            </Vbox>
+            <ButtonBox>
+              <ButtnDiv>{element.difficulty} dif</ButtnDiv>
+            </ButtonBox>
+          </Fbox>
+        </ViewBlockBox>
+      );
+    })}
+    <ViewAll>VIEW ALL BLOCKS →</ViewAll>
+  </VblockBox>
+  ```
+
+- rendering이 먼저 되어 버리는 경우
+
+  - container
+
+  ```jsx
+  async function getInfo(type, value) {
+    const { data } = await request.post("/web3/getInfo", {
+      value: value,
+      type: type,
+    });
+
+    setInfo(data.info);
+  }
+  useEffect(() => {
+    getInfo(type, typeNum).then();
+  }, []);
+  return <ViewInfoComponent info={info} type={type} />;
+  ```
+
+  - component
+
+  ```jsx
+  console.log(info);
+  return (
+    <>
+      <Board>
+        {type == "block" ? (
+          <>
+            <div>
+              <div>
+                🐒<div> Miner:</div> <div>{info.miner}</div>
+              </div>
+              <div>
+              ---
+  ```
+
+  무슨 차이인지 모르겠다 아직까지는
+
+### redux 연습 필수다.

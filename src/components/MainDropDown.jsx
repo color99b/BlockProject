@@ -6,11 +6,15 @@ const MainDropDownComponent = () => {
   return (
     <Main>
       <div>
-        <img src={logo} alt="" />
+        <Move href="/">
+          <img src={logo} alt="" />
+        </Move>
       </div>
 
       <Fbox>
-        <div>Home</div>
+        <div>
+          <Move href="/">Home</Move>
+        </div>
         <div>
           BlockChain <img src={down} alt="" srcset="" />
         </div>
@@ -49,7 +53,7 @@ const Main = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 3.3rem 7.5rem 0.5rem 5.5rem;
-  > div > img {
+  > div > a > img {
     width: 10rem;
   }
   box-shadow: 0 10px 30px 0.1px rgba(0, 0, 0, 0.1);
@@ -82,5 +86,10 @@ const Fbox = styled.div`
   > div:nth-child(7) > img {
     margin-right: -0.5rem;
   }
+`;
+
+const Move = styled.a`
+  text-decoration: none;
+  color: inherit;
 `;
 export default MainDropDownComponent;

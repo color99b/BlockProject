@@ -6,6 +6,8 @@ import HeaderContainer from "./containers/Header";
 import { Link, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import ViewAllPage from "./pages/ViewAllPage";
+import ViewInfoPage from "./pages/ViewInfoPage";
+import ViewWalletPage from "./pages/ViewWalletPage";
 function App() {
   return (
     <div className="App">
@@ -15,7 +17,13 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
 
-          <Route path="/viewblock" element={<ViewAllPage />} />
+          <Route path="/viewblock" element={<ViewAllPage view={"block"} />} />
+          <Route
+            path="/viewtransaction"
+            element={<ViewAllPage view={"transaction"} />}
+          />
+          <Route path="/info?" element={<ViewInfoPage />} />
+          <Route path="/wallet?" element={<ViewWalletPage />} />
         </Routes>
       </Body>
     </div>

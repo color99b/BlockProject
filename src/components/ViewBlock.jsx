@@ -1,8 +1,19 @@
+import { useEffect } from "react";
 import styled from "styled-components";
-
-const ViewBlockComponent = ({ blockArr, transactionArr }) => {
-  console.log(blockArr);
-  console.log(transactionArr);
+import SpeakBubbleComponent from "./SpeakBubble";
+import AllBlock from "./AllBlock";
+import AllTransaction from "./AllTransaction";
+const ViewBlockComponent = ({
+  blockArr,
+  transactionArr,
+  next,
+  before,
+  last,
+  first,
+  pagination,
+  view,
+  paginationTrans,
+}) => {
   return (
     <Main>
       <div>
@@ -66,12 +77,41 @@ const ViewBlockComponent = ({ blockArr, transactionArr }) => {
             <div>(Showing blocks between #16674260 to #16674284)</div>
           </HeadLeft>
           <HeadRight>
-            <button>paging</button>
+            <SpeakBubbleComponent
+              str={"Frist"}
+              func={first}
+              placeHold={"Go to Frist"}
+              type={view == "transaction" ? "transaction" : "block"}
+            />
+            <SpeakBubbleComponent
+              str={"〈"}
+              func={before}
+              topPadding={"0.25"}
+              placeHold={"Go to before"}
+              type={view == "transaction" ? "transaction" : "block"}
+            />
+            <SpeakBubbleComponent
+              str={view == "transaction" ? paginationTrans : pagination}
+              hover={"none"}
+            />
+            <SpeakBubbleComponent
+              str={"〉"}
+              func={next}
+              topPadding={"0.25"}
+              placeHold={"Go to next"}
+              type={view == "transaction" ? "transaction" : "block"}
+            />
+            <SpeakBubbleComponent
+              str={"Last"}
+              func={last}
+              placeHold={"Go to Last"}
+              type={view == "transaction" ? "transaction" : "block"}
+            />
           </HeadRight>
         </BoardHead>
         <Table>
           <thead>
-            <Th>Block</Th>
+            {/* <Th>Block</Th>
             <Th>Age</Th>
             <Th>Txn</Th>
             <Th>Miner Account</Th>
@@ -79,32 +119,39 @@ const ViewBlockComponent = ({ blockArr, transactionArr }) => {
             <Th>Gas Limit</Th>
             <Th>Difficulty</Th>
             <Th>Reward</Th>
-            <Th>Burnt Fees (ETH)</Th>
+            <Th>Burnt Fees (ETH)</Th> */}
+            {view == "transaction" ? (
+              <>
+                <Th>ρ</Th>
+                <Th>Txn Hash</Th>
+                <Th>Block</Th>
+                <Th>Age</Th>
+                <Th>From</Th>
+                <Th></Th>
+                <Th>To</Th>
+                <Th>Value</Th>
+                <Th>Gas</Th>
+              </>
+            ) : (
+              <>
+                <Th>Block</Th>
+                <Th>Age</Th>
+                <Th>Txn</Th>
+                <Th>Miner Account</Th>
+                <Th>Gas Used</Th>
+                <Th>Gas Limit</Th>
+                <Th>Difficulty</Th>
+                <Th>Reward</Th>
+                <Th>Burnt Fees (ETH)</Th>
+              </>
+            )}
           </thead>
           <tbody>
-            {blockArr.map((item, index) => {
-              return (
-                <>
-                  <tr>
-                    <td>{item.number}</td>
-                    <td>8 secs ago</td>
-                    <td>{item.size}</td>
-                    <td>{item.miner}</td>
-                    <td>
-                      {item.gasUsed}
-                      {}
-                    </td>
-                    <td>{item.gasLimit}</td>
-                    <td>{item.difficulty}</td>
-                    <td>{Math.random().toFixed(3)} ETH</td>
-                    <td>
-                      {Math.random().toFixed(3)}(
-                      {(Math.random() * 9).toFixed(3)}%)
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
+            {view == "transaction"
+              ? transactionArr.map((item, index) => (
+                  <AllTransaction item={item} />
+                ))
+              : blockArr.map((item, index) => <AllBlock item={item} />)}
           </tbody>
         </Table>
         <div></div>
@@ -177,9 +224,13 @@ const HeadLeft = styled.div``;
 const HeadRight = styled.div`
   display: flex;
   align-items: center;
+  > div {
+    position: relative;
+  }
+  gap: 0.2rem;
 `;
 const Table = styled.table`
-  text-aling: left;
+  text-align: center;
   padding: 1rem 0 1rem 0.3rem;
   > thead {
     gap: 10rem;
@@ -187,7 +238,7 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  text-align: left;
+  text-align: center;
 `;
 
 const BlockSpan = styled.span`
@@ -216,4 +267,5 @@ const FootAlert = styled.div`
   font-size: 0.8rem;
   padding-top: 0.5rem;
 `;
+
 export default ViewBlockComponent;
