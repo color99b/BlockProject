@@ -66,6 +66,22 @@
   eth.sendTransaction({from:"" , to:"", value:""})
   ```
 
+5. geth 서버와 연결 되었을 때 mine이 되어 블록이 생성되면 자동으로 db에 들어가야하는데, 이 때 자동으로 들어가지 않고 react front에서 새로고침을 해야 create를 호출해 만드는 건 오류가 있다.
+
+- 해결 : block 이 mine 되자마자 web3.js 서버쪽에서 바로 create를 통해 db에 바로바로 넣어준다. 이때 db에는 저장이 되지만, react는 렌더링이 되지 않았기에 새로고침을 해야 data가 나타난다.
+  - block 이 생성되는 걸 바로 알기위해 geth와 연결을 하는 method : subscribe
+
+```sh
+web3.eth.subscribe("newBlockHeaders", (error, result) => {
+
+  if (!error) {
+    console.log("newBlockHeaders : ", result);
+  } else {
+    return console.log("블록이 없습니다.");
+  }
+});
+```
+
 # CSS
 
 1.
@@ -117,6 +133,11 @@
   ```
 ````
 
+5. location query 한글 깨짐
+
+- 검색 결과를 찾을 수 없을 때 검색할 때 입력한 값을 query를 통해 location 했는데, 검색한 내용에 대해 front에서 띄울 때 useLocation으로 query를 받아오니까 %AFAS#@% 이런식으로 깨지는 현상이 발생했다.
+  - 해결 : decodeURI({변수명}) 를 통해 자동으로 변환된 code를 다시 한글로 풀어낼 수 있었다.
+
 # DataBase(Mysql2)
 
 1. react의 useEffect를 통해 페이지를 새로 불러올때마다 ( 새로고침 할 때마다 ) mining 된 block 및 transaction 을 가져오는 코드를 구성했다.
@@ -145,6 +166,49 @@ offset = 7 * (pageNum - 1);
 offset: offset,
 limit: 7
 })
+```
+
+3. db의 블록이든, transaction 이든 쌓이다보면 몇 백개가 넘을 수 있는 data를 한 화면에 밑으로 scroll로만 보여주기엔 문제가 있다. 따라서 pagination 작업을 해야만 한다.
+
+- 해결 : sequelize 에서 제공하는 limit, offset method를 활용한다.
+
+```sh
+const temp = await {모델명}.findAll({
+      where: {
+       {column명} : {원하는 값}
+      },
+      order: [[{column 명}, "desc"]],  // desc는 내림차순
+      offset: {매개변수},
+      limit: {매개변수},
+    });
+```
+
+여기서 offset은 몇 번째 index부터 보여줄 것인지, limit는 한 번에 몇 개까지 가져올 것인지를 말한다.
+따라서 나머지는 js로 컨트롤 해준다.
+
+```
+axios 통신을 보낼때 offset과 limit를 수정할수 있도록 매개변수로 받아와주고, front에서는 1page면 offset 이 처음엔 1, 2page면 offset += page당 limit 가 되겠다.
+```
+
+4. Transaction을 출력할 때 어떤 계정에서 어떤 계정으로 보냈는지 즉 from 과 to가 저장이 되게 되는데, 한 계정을 조회 하면 transaction database에서 조회한 계정이 from으로 저장된data와 to로 저장된 data 모두를 불러와야했고, 불러온 모두를 발생 순서에 따라 정렬해서 출력해야했다.
+
+- 해결: db에서 findAll 로 따로 따로 가져와서 배열에 spread 로 합쳐보았으나 정렬에 문제가 많았다. sequlize 문 중에 or와 같은 연산자를 하는 역할의 method가 있었다.
+
+```sh
+const OP = require ("sequelize");
+
+const find = async(req,res)=>{
+  const data = await {table명}.findAll({
+    where : [Op.op]: [
+      {
+      {column명} : {찾고자 하는 값}
+      },
+      {
+        위와 같은 식
+      }
+    ]
+  })
+}
 ```
 
 # React

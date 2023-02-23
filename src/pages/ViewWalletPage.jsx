@@ -265,7 +265,7 @@ const ViewWalletPage = () => {
             </Main>
           </>
         ) : (
-          <NotFoundComponent text={address ? address : ""} />
+          <NotFoundComponent text={address ? address : ""} type={"Address"} />
         )
       ) : (
         ""

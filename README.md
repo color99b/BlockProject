@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+# block explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 개요
 
-## Available Scripts
+- 블록, 트랜잭션, 지갑 주소에 대한 모든 정보를 확인할 수 있다.
 
-In the project directory, you can run:
+## stack
 
-### `yarn start`
+- HTML, CSS, JavaScript, React, Node.js, mySQL, MetaMask, Web3, Geth
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 최소 기능 구현
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 블록, 트랜잭션, 지갑 주소 정보 출력
+- 토큰의 코인에 대한 가격은 개인판단
 
-### `yarn test`
+- 블록을 db에 저장해서 검색호출하는게 빠르다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- package.json 백업
+  // "start": "react-scripts start",
+  // "build": "react-scripts build",
+  // "test": "react-scripts test",
+  // "eject": "react-scripts eject"
 
-### `yarn build`
+//
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## project wsl2 계정목록
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+["0x8de70fb18b7fd244ac472df5845d327dea1d4134", "0x9f1291e475547e74987fd8be14e4a030d5c588ea", "0xdb750b1b6c4ebf25027c321d5d723251d923fa8b", "0x6f97cdb99483126a61173a188d84dabb8ea169b7", "0x233724c4671efeccfe3155a19cba32fcf4ba89fd", "0x4f6699190e0bcadac4a3c75a4d446e3a8be35fbc", "0x79cd4144b050174642d9778d3be023923e21974e", "0x0c884066473ffa1c65f07549bf581a26e735f765", "0x92161068a50403fb5c7d788fc067406b93a73c07", "0xea42648d8bab73b6ecc0f8068bd6afaea99150cd", "0x7c56cac6a733053b9fdfdefe246311576a37dc24", "0xdba0e1b79b56d52be32dc006acc49e1cf761c9e2"]
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## transaction 구문
 
-### `yarn eject`
+eth.sendTransaction({from:"" , to:"", value:""})
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+eth.sendTransaction({from:"0x8de70fb18b7fd244ac472df5845d327dea1d4134" , to:"0x6f97cdb99483126a61173a188d84dabb8ea169b7", value:"2"})

@@ -10,7 +10,6 @@ const getBlockFunc = () =>
   web3.eth.getBlockNumber(async function (err, rtn) {
     let latest_block_number = rtn;
     const temp = await Block.findOne({ id: 1 });
-    // console.log("temp", temp);
 
     if (temp) {
       console.log("걸렸다");

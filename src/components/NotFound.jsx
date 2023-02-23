@@ -11,7 +11,7 @@ const NotFoundComponent = ({ text, type }) => {
             Oops! 당신이 검색한 키워드:{" "}
             <span style={{ fontSize: "1.2rem", color: "rgba(0,0,255,0.6)" }}>
               {" "}
-              {`${text}`}
+              {`${decodeURI(text)}`}
             </span>
           </div>
           <div>
