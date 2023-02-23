@@ -18,7 +18,9 @@ const ViewBlockComponent = ({
     <Main>
       <div>
         <BlockSpan>
-          <WeightFont>Blocks</WeightFont>
+          <WeightFont>
+            {view == "transaction" ? "Transaction" : "Block"}
+          </WeightFont>
         </BlockSpan>
       </div>
       <hr />

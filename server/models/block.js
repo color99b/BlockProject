@@ -71,9 +71,9 @@ module.exports = class Block extends Sequelize.Model {
           type: Sequelize.STRING(200),
         },
 
-        // uncles: {
-        //   type: Sequelize.ARRAY(Sequelize.STRING(200)),
-        // },
+        txns: {
+          type: Sequelize.INTEGER,
+        },
       },
       {
         sequelize,

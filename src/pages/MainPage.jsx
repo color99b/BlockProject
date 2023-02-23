@@ -10,6 +10,7 @@ const MainPage = () => {
   useEffect(() => {}, []);
   return (
     <>
+      asdasd
       <MainDropDownContainer />
       <ItemSearchContainer />
       <BlockContainer />

@@ -22,13 +22,14 @@
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.6.0",
     "styled-components": "^5.3.6",
+    "sweetalert2": "^11.7.2",
     "web-vitals": "^2.1.0",
     "web3": "^1.8.2",
     "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "npm-run-all --parallel start:**",
-    "start:sever": "nodemon ./server",
+    "start:server": "nodemon ./server",
     "start:client": "react-scripts start",
     "build": "react-scripts build"
   },

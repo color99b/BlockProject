@@ -1,6 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import ItemSearchComponent from "../components/ItemSearch";
 const ItemSearchContainer = () => {
-  return <ItemSearchComponent />;
+  const navigate = useNavigate();
+
+  const searchLink = (item) => {
+    navigate(`/info/?${item}`);
+  };
+  return <ItemSearchComponent move={searchLink} />;
 };
 
 export default ItemSearchContainer;

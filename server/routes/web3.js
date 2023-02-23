@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Web3 = require("web3");
 const { Block, Transaction } = require("../models");
-
+const { Op } = require("sequelize");
 const web3 = new Web3(
   new Web3.providers.WebsocketProvider("ws://localhost:8081")
 );
@@ -26,12 +26,14 @@ const getBlockFunc = () =>
       for (let i = lastBlockNum + 1; i <= latest_block_number; i++) {
         web3.eth.getBlock(i, false, async function (err, block) {
           if (block.transactions[0]) {
+            block.txns = block.transactions.length;
             block.transactions = block.transactions[0];
             // await Transaction.create({ transaction: block.transactions });
           } else {
             block.transactions = "";
           }
           await Block.create(block);
+          console.log("Block.transactions.length", block.transactions.length);
           web3.eth.getBlockTransactionCount(i, true, function (err, cnt) {
             if (cnt > 0) {
               for (let j = lastBlockNum + 1; j < cnt; j++) {
@@ -40,7 +42,7 @@ const getBlockFunc = () =>
                   j,
                   async function (err, tx) {
                     await Transaction.create(tx);
-                    console.log(tx);
+                    // console.log(tx);
                   }
                 );
               }
@@ -54,12 +56,15 @@ const getBlockFunc = () =>
       for (let i = 0; i <= latest_block_number; i++) {
         web3.eth.getBlock(i, false, async function (err, block) {
           if (block.transactions[0]) {
+            block.txns = block.transactions.length;
             block.transactions = block.transactions[0];
+
             // await Transaction.create({ transaction: block.transactions });
           } else {
             block.transactions = "";
           }
           await Block.create(block);
+
           web3.eth.getBlockTransactionCount(i, true, function (err, cnt) {
             if (cnt > 0) {
               for (let j = 0; j < cnt; j++) {
@@ -68,7 +73,7 @@ const getBlockFunc = () =>
                   j,
                   async function (err, tx) {
                     await Transaction.create(tx);
-                    console.log(tx);
+                    // console.log(tx);
                   }
                 );
               }
@@ -97,6 +102,63 @@ const getBlockFunc = () =>
     }
   });
 
+web3.eth.subscribe("newBlockHeaders", (error, result) => {
+  // console.log("newBlockHeaders : ", result);
+  console.log("hi헬로우");
+  getBlockFunc();
+  if (!error) {
+    // console.log("newBlockHeaders : ", result);
+  } else {
+    return console.log("블록이 없습니다.");
+  }
+});
+
+router.post("/getBalance", async (req, res) => {
+  try {
+    const balance = await web3.eth.getBalance(req.body.value);
+
+    console.log("balance", balance);
+
+    res.send({
+      isError: false,
+      balance: (balance / 10 ** 18).toFixed(7),
+    });
+  } catch (error) {
+    res.send({ isError: true, error: error });
+  }
+});
+
+router.post("/getWallet", async (req, res) => {
+  try {
+    let pageNum = req.body.num;
+    let offset = 0;
+    if (pageNum > 1) {
+      offset = req.body.viewCount * (pageNum - 1);
+    }
+    const walletLength = await Transaction.count({
+      where: {
+        [Op.or]: [{ from: req.body.value }, { to: req.body.value }],
+      },
+    });
+    const walletInfo = await Transaction.findAll({
+      where: {
+        [Op.or]: [{ from: req.body.value }, { to: req.body.value }],
+      },
+      order: [["nonce", "desc"]],
+      offset: offset,
+      limit: req.body.viewCount,
+    });
+
+    res.send({
+      isError: false,
+      info: walletInfo,
+      length: walletLength,
+    });
+  } catch (error) {
+    res.send({ isError: true });
+  }
+});
+
 router.post("/getInfo", async (req, res) => {
   try {
     switch (req.body.type) {
@@ -108,7 +170,7 @@ router.post("/getInfo", async (req, res) => {
           isError: false,
           info: blockInfo,
         });
-        console.log(blockInfo);
+        // console.log(blockInfo);
         break;
 
       case "transaction":
@@ -132,11 +194,11 @@ router.post("/getInfo", async (req, res) => {
 router.post("/getList", async (req, res) => {
   // let pageNum = req.query.page;
   // console.log("pageNum", pageNum);
-  console.log(req.body.viewCount);
+  // console.log(req.body.viewCount);
   let pageNum = req.body.num;
   let offset = 0;
   if (pageNum > 1) {
-    offset = 20 * (pageNum - 1);
+    offset = req.body.viewCount * (pageNum - 1);
   }
 
   const blockArrLength = await Block.count();
@@ -176,17 +238,8 @@ router.post("/getBlock", async (req, res) => {
     limit: 5,
     order: [["blockNumber"], ["transactionIndex"]],
   });
-  console.log(transactionArr);
+  // console.log(transactionArr);
   // const filter = web3.eth.filter("latest");
-  web3.eth.subscribe("newBlockHeaders", (error, result) => {
-    // console.log("newBlockHeaders : ", result);
-
-    if (!error) {
-      // console.log("newBlockHeaders : ", result);
-    } else {
-      return console.log("블록이 없습니다.");
-    }
-  });
 
   // console.log(blockArr);
   try {

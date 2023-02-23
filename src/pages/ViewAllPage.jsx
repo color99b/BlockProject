@@ -47,7 +47,9 @@ const ViewAllPage = ({ view }) => {
     setPageNum(1);
   };
   const last = (item) => {
-    setPageNum(Math.ceil(blockLength / viewCount));
+    setPageNum(
+      Math.ceil((item == "block" ? blockLength : transactionLength) / viewCount)
+    );
   };
   const pagination = `Page ${pageNum} of ${Math.ceil(blockLength / viewCount)}`;
 

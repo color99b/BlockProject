@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import etherSmall from "../imgs/ethereum-original.svg";
 import gas from "../imgs/gas.svg";
+import spon from "../imgs/spon2.gif";
 const ViewInfoComponent = ({ info, type }) => {
   console.log(info);
 
@@ -19,9 +20,16 @@ const ViewInfoComponent = ({ info, type }) => {
               <div>
                 📁<div> Transactions:</div>{" "}
                 <div>
-                  {info.transactions
-                    ? info.transactions
-                    : "transaction 이 존재하지 않습니다."}
+                  {info.transactions ? (
+                    <Blue>
+                      <Move href={`/info?transaction=${info.transactions}`}>
+                        {" "}
+                        {info.transactions}{" "}
+                      </Move>
+                    </Blue>
+                  ) : (
+                    "transaction 이 존재하지 않습니다."
+                  )}
                 </div>
               </div>
             </div>
@@ -73,9 +81,17 @@ const ViewInfoComponent = ({ info, type }) => {
             <div>
               <div>
                 🎭<div> Sponsored:</div>{" "}
-                <div>
-                  히히 광고받아서 <Blue>냉면 사묵어야지~</Blue>
-                </div>
+                <SponBox>
+                  <Ad>Ad</Ad>
+                  <IMGBox>
+                    <Move
+                      href="https://play.google.com/store/apps/details?id=com.vincentb.MobControl"
+                      target={"_blank"}
+                    >
+                      <img src={spon} alt="" srcset="" />
+                    </Move>
+                  </IMGBox>
+                </SponBox>
               </div>
             </div>
 
@@ -205,6 +221,36 @@ const Button = styled.button`
   &:first-child {
     // color: red;
   }
+`;
+
+const SponBox = styled.div`
+  position: relative;
+  // width: fit-content;
+`;
+
+const IMGBox = styled.div`
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+
+  > a > img {
+    width: 50%;
+  }
+`;
+const Ad = styled.div`
+  position: absolute;
+  top: -5%;
+  left: 45%;
+  z-index: 10;
+  padding: 0.3rem 0.5rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  border-radius: 10px;
+`;
+
+const Move = styled.a`
+  text-decoration: none;
+  color: inherit;
 `;
 
 export default ViewInfoComponent;

@@ -99,10 +99,16 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                 <Fbox>
                   <Vbox>
                     <div>
-                      Fee Recipient <Blue>Flashbots: Builder</Blue>
+                      Fee Recipient{" "}
+                      <Blue>
+                        <Move href={"/wallet/?" + element.miner}>
+                          {element.miner.slice(0, 20)}...
+                        </Move>
+                      </Blue>
                     </div>
                     <div>
-                      <Blue>146 txns</Blue> in 12 secs
+                      <Blue>{element.txns ? element.txns : 0} txns</Blue> in 12
+                      secs
                     </div>
                   </Vbox>
                   <ButtonBox>
@@ -112,7 +118,9 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
               </ViewBlockBox>
             );
           })}
-          <ViewAll>VIEW ALL BLOCKS →</ViewAll>
+          <ViewAll>
+            <Move href="/viewblock">VIEW ALL BLOCKS →</Move>
+          </ViewAll>
         </VblockBox>
         <VblockBox>
           <ViewBlockTitle>Latest Transactions</ViewBlockTitle>
@@ -137,12 +145,20 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                     From
                     <div>
                       {" "}
-                      <Blue>→ {element.from.slice(0, 25)}...</Blue>{" "}
+                      <Blue>
+                        <Move href={`/wallet/?${element.from}`}>
+                          → {element.from.slice(0, 25)}...
+                        </Move>
+                      </Blue>{" "}
                     </div>
                     To
                     <div>
                       {" "}
-                      <Blue> ← {element.to.slice(0, 25)}...</Blue>
+                      <Blue>
+                        <Move href={`/wallet/?${element.to}`}>
+                          ← {element.to.slice(0, 25)}...
+                        </Move>
+                      </Blue>
                     </div>
                   </FromTo>
                   <ButtonBox>
@@ -152,7 +168,9 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
               </ViewBlockBox>
             );
           })}
-          <ViewAll>VIEW ALL BLOCKS →</ViewAll>
+          <ViewAll>
+            <Move href="/viewtransaction">VIEW ALL TRANSACTIONS →</Move>
+          </ViewAll>
         </VblockBox>
       </BottomBlockBox>
     </Main>

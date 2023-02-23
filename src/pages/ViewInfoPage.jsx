@@ -1,9 +1,10 @@
 import MainDropDownContainer from "../containers/MainDropDown";
 import FooterContainer from "../containers/Footer";
 import styled from "styled-components";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import NotFoundComponent from "../components/NotFound";
 import ViewInfoComponent from "../components/ViewInfoComponent";
 const ViewInfoPage = () => {
   const request = axios.create({
@@ -25,46 +26,55 @@ const ViewInfoPage = () => {
   useEffect(() => {
     getInfo(type, typeNum);
   }, []);
-
+  console.log(info ? info[0] : "");
   return (
     <>
       <MainDropDownContainer />
-      <Main>
-        <div>
-          <BlockSpan>
-            <WeightFont>Blocks</WeightFont>
-          </BlockSpan>
-        </div>
-        <hr />
-        <div>
-          <GraySpan>
-            <WeightFont> Featured: </WeightFont>
-          </GraySpan>
-          <GraySpan>
-            Bridging tokens between Ethereum, Layer 2 and other chains? Browse
-            through the Blockscan
-          </GraySpan>{" "}
-          <Blue>
-            <WeightFont> bridges list. </WeightFont>
-          </Blue>
-        </div>
-        <ButtonBox>
-          <Button>Overview</Button>
-          <Button>Consensus Info</Button>
-          <Button>MEV Info</Button>
-          <Button>Comments</Button>
-        </ButtonBox>
 
-        {info ? <ViewInfoComponent info={info} type={type} /> : <>123</>}
-        {/* <ViewInfoComponent info={info} type={type} /> */}
+      {info ? (
+        <>
+          <Main>
+            <div>
+              <BlockSpan>
+                <WeightFont>
+                  {type == "block" ? "Blocks" : "Transactions"}
+                </WeightFont>
+              </BlockSpan>
+            </div>
+            <hr />
+            <div>
+              <GraySpan>
+                <WeightFont> Featured: </WeightFont>
+              </GraySpan>
+              <GraySpan>
+                Bridging tokens between Ethereum, Layer 2 and other chains?
+                Browse through the Blockscan
+              </GraySpan>{" "}
+              <Blue>
+                <WeightFont> bridges list. </WeightFont>
+              </Blue>
+            </div>
+            <ButtonBox>
+              <Button>Overview</Button>
+              <Button>Consensus Info</Button>
+              <Button>MEV Info</Button>
+              <Button>Comments</Button>
+            </ButtonBox>
 
-        <FootAlert>
-          💡 Blocks are batches of transactions linked together via
-          cryptographic hashes. Any tampering of a block invalidates subsequent
-          blocks as their hashes would be changed. Learn more about this page in
-          our Knowledge Base.
-        </FootAlert>
-      </Main>
+            {info ? <ViewInfoComponent info={info} type={type} /> : <>123</>}
+            {/* <ViewInfoComponent info={info} type={type} /> */}
+
+            <FootAlert>
+              💡 Blocks are batches of transactions linked together via
+              cryptographic hashes. Any tampering of a block invalidates
+              subsequent blocks as their hashes would be changed. Learn more
+              about this page in our Knowledge Base.
+            </FootAlert>
+          </Main>
+        </>
+      ) : (
+        <NotFoundComponent text={typeNum} type={type} />
+      )}
       <FooterContainer />
     </>
   );
