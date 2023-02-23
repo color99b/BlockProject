@@ -26,7 +26,7 @@ const ViewInfoPage = () => {
   useEffect(() => {
     getInfo(type, typeNum);
   }, []);
-  console.log(info ? info[0] : "");
+
   return (
     <>
       <MainDropDownContainer />

@@ -8,10 +8,13 @@ import internet from "../imgs/internet.svg";
 import transGif from "../imgs/trans.gif";
 
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const BlockBoxComponent = ({ blockArr, transactionArr }) => {
-  console.log(transactionArr);
-  // console.log(new Date(blockArr[0].createdAt).toTimeString().split(" ")[0]);
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
   return (
     <Main>
       <BlockBox>
@@ -88,7 +91,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                   <Vbox>
                     <div>
                       <Blue>
-                        <Move href={"info/?block=" + element.number.toString()}>
+                        <Move
+                          onClick={() => {
+                            move("info/?block=" + element.number.toString());
+                          }}
+                        >
                           {element.number}
                         </Move>
                       </Blue>{" "}
@@ -101,7 +108,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                     <div>
                       Fee Recipient{" "}
                       <Blue>
-                        <Move href={"/wallet/?" + element.miner}>
+                        <Move
+                          onClick={() => {
+                            move("/wallet/?" + element.miner);
+                          }}
+                        >
                           {element.miner.slice(0, 20)}...
                         </Move>
                       </Blue>
@@ -119,7 +130,13 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
             );
           })}
           <ViewAll>
-            <Move href="/viewblock">VIEW ALL BLOCKS →</Move>
+            <Move
+              onClick={() => {
+                move("/viewblock");
+              }}
+            >
+              VIEW ALL BLOCKS →
+            </Move>
           </ViewAll>
         </VblockBox>
         <VblockBox>
@@ -132,7 +149,9 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                   <Vbox>
                     <div>
                       <Move
-                        href={"info?transaction=" + element.hash.toString()}
+                        onClick={() => {
+                          move("info?transaction=" + element.hash.toString());
+                        }}
                       >
                         <Blue>{element.hash.slice(0, 25)}...</Blue>{" "}
                       </Move>
@@ -146,7 +165,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                     <div>
                       {" "}
                       <Blue>
-                        <Move href={`/wallet/?${element.from}`}>
+                        <Move
+                          onClick={() => {
+                            move(`/wallet/?${element.from}`);
+                          }}
+                        >
                           → {element.from.slice(0, 25)}...
                         </Move>
                       </Blue>{" "}
@@ -155,7 +178,11 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
                     <div>
                       {" "}
                       <Blue>
-                        <Move href={`/wallet/?${element.to}`}>
+                        <Move
+                          onClick={() => {
+                            move(`/wallet/?${element.to}`);
+                          }}
+                        >
                           ← {element.to.slice(0, 25)}...
                         </Move>
                       </Blue>
@@ -169,7 +196,13 @@ const BlockBoxComponent = ({ blockArr, transactionArr }) => {
             );
           })}
           <ViewAll>
-            <Move href="/viewtransaction">VIEW ALL TRANSACTIONS →</Move>
+            <Move
+              onClick={() => {
+                move("/viewtransaction");
+              }}
+            >
+              VIEW ALL TRANSACTIONS →
+            </Move>
           </ViewAll>
         </VblockBox>
       </BottomBlockBox>
@@ -406,9 +439,10 @@ const To = styled.div`
   text-overflow: ellipsis;
 `;
 
-const Move = styled.a`
+const Move = styled.div`
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 `;
 
 export default BlockBoxComponent;

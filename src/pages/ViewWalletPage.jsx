@@ -29,7 +29,7 @@ const ViewWalletPage = () => {
       num: num,
       viewCount: viewCount,
     });
-    console.log(data);
+
     setWallet(data.info);
     setWalletLentgth(data.length);
   }
@@ -65,7 +65,6 @@ const ViewWalletPage = () => {
   const pagination = `Page ${pageNum} of ${Math.ceil(
     walletLength / viewCount
   )}`;
-  console.log(wallet);
 
   return (
     <>

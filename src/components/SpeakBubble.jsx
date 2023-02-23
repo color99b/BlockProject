@@ -21,7 +21,6 @@ const SpeakBubbleComponent = ({
         topPadding={topPadding}
         // disabled={true}
         onClick={() => {
-          console.log(type);
           func(type);
         }}
       >

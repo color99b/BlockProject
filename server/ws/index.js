@@ -9,12 +9,5 @@ const web3 = new Web3(
 
 web3.eth.subscribe("newBlockHeaders", (error, result) => {
   if (!error) {
-    console.log(result);
   }
 });
-
-// web3.eth.getAccounts().then((data) => console.log(data));
-
-// app.listen(8000, () => {
-//   console.log("8000 server open");
-// });

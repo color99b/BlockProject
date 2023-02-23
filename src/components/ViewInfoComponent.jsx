@@ -2,9 +2,12 @@ import styled from "styled-components";
 import etherSmall from "../imgs/ethereum-original.svg";
 import gas from "../imgs/gas.svg";
 import spon from "../imgs/spon2.gif";
+import { useNavigate } from "react-router";
 const ViewInfoComponent = ({ info, type }) => {
-  console.log(info);
-
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
   return (
     <>
       <Board>
@@ -22,7 +25,11 @@ const ViewInfoComponent = ({ info, type }) => {
                 <div>
                   {info.transactions ? (
                     <Blue>
-                      <Move href={`/info?transaction=${info.transactions}`}>
+                      <Move
+                        onClick={() => {
+                          move(`/info?transaction=${info.transactions}`);
+                        }}
+                      >
                         {" "}
                         {info.transactions}{" "}
                       </Move>

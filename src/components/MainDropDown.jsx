@@ -2,18 +2,35 @@ import styled from "styled-components";
 import logo from "../imgs/logo-etherscan.svg";
 import down from "../imgs/down.svg";
 import user from "../imgs/user.svg";
+import { useLocation, useNavigate } from "react-router";
 const MainDropDownComponent = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location.pathname);
+  const move = (path) => {
+    navigate(path);
+  };
   return (
-    <Main>
+    <Main top={location.pathname == "/" ? "2rem" : "3.3rem"}>
       <div>
-        <Move href="/">
+        <Move
+          onClick={() => {
+            move("/");
+          }}
+        >
           <img src={logo} alt="" />
         </Move>
       </div>
 
       <Fbox>
         <div>
-          <Move href="/">Home</Move>
+          <Move
+            onClick={() => {
+              move("/");
+            }}
+          >
+            Home
+          </Move>
         </div>
         <div>
           BlockChain <img src={down} alt="" srcset="" />
@@ -52,7 +69,11 @@ const Main = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3.3rem 7.5rem 0.5rem 5.5rem;
+  padding: 0 7.5rem 0.5rem 5.5rem;
+  padding-top: ${(probs) => {
+    console.log(probs);
+    return probs.top;
+  }};
   > div > a > img {
     width: 10rem;
   }
@@ -91,5 +112,6 @@ const Fbox = styled.div`
 const Move = styled.a`
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 `;
 export default MainDropDownComponent;

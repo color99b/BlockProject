@@ -1,20 +1,39 @@
 import styled from "styled-components";
-
+import { useNavigate } from "react-router";
 const AllBlock = ({ item }) => {
-  console.log(item);
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
   return (
     <tr>
       <Blue>
-        <Move href={`/info/?block=${item.number}`}>{item.number}</Move>
+        <Move
+          onClick={() => {
+            move(`/info/?block=${item.number}`);
+          }}
+        >
+          {item.number}
+        </Move>
       </Blue>
       <td>8 secs ago</td>
       <Blue>
-        <Move href={item.txns ? `/info/?transaction=${item.transactions}` : ""}>
+        <Move
+          onClick={() => {
+            move(item.txns ? `/info/?transaction=${item.transactions}` : "");
+          }}
+        >
           {item.txns ? item.txns : 0}
         </Move>
       </Blue>
       <Blue>
-        <Move href={`/wallet/?${item.miner}`}>{item.miner}</Move>
+        <Move
+          onClick={() => {
+            move(`/wallet/?${item.miner}`);
+          }}
+        >
+          {item.miner}
+        </Move>
       </Blue>
       <td>{item.gasUsed}</td>
       <td>{item.gasLimit}</td>
@@ -26,9 +45,10 @@ const AllBlock = ({ item }) => {
     </tr>
   );
 };
-const Move = styled.a`
+const Move = styled.div`
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 `;
 
 const Blue = styled.td`

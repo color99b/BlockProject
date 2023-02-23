@@ -41,10 +41,8 @@ const ItemSearchComponent = ({ move }) => {
         break;
 
       default:
-        console.log(select ? select : "");
         break;
     }
-    // move(e.target.value);
   };
 
   return (

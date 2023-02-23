@@ -17,9 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
 
-          <Route path="/viewblock" element={<ViewAllPage view={"block"} />} />
+          <Route path="/viewblock?" element={<ViewAllPage view={"block"} />} />
           <Route
-            path="/viewtransaction"
+            path="/viewtransaction?"
             element={<ViewAllPage view={"transaction"} />}
           />
           <Route path="/info?" element={<ViewInfoPage />} />
@@ -33,5 +33,9 @@ function App() {
 const Body = styled.div`
   // padding: 1rem 5rem 5rem 5rem;
   font-family: "sans-serif";
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 export default App;

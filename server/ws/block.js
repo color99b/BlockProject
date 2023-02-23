@@ -14,7 +14,6 @@ describe("web3 테스트 코드", () => {
 
   it("Latest Block 높이(number) 가져오기", async () => {
     const latestBlock = await web3.eth.getBlockNumber();
-    console.log(latestBlock);
   });
 
   it("전체 accounts 가져오기", async () => {
@@ -22,6 +21,5 @@ describe("web3 테스트 코드", () => {
     accounts = await web3.eth.getAccounts();
     sender = accounts[0];
     received = accounts[1];
-    console.log(accounts);
   });
 });

@@ -1,18 +1,30 @@
 import styled from "styled-components";
-
+import { useNavigate } from "react-router";
 const AllTransaction = ({ item }) => {
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
   return (
     <tr>
       <td>Info</td>
 
       <Blue>
-        <Move href={`/info/?transaction=${item.hash}`}>
+        <Move
+          onClick={() => {
+            move(`/info/?transaction=${item.hash}`);
+          }}
+        >
           {item.hash.slice(0, 25)}...
         </Move>
       </Blue>
 
       <Blue>
-        <Move href={`/info/?block=${item.blockNumber}`}>
+        <Move
+          onClick={() => {
+            move(`/info/?block=${item.blockNumber}`);
+          }}
+        >
           {item.blockNumber}
         </Move>
       </Blue>
@@ -20,13 +32,25 @@ const AllTransaction = ({ item }) => {
       <td>{new Date(item.createdAt).toLocaleString()}</td>
 
       <Blue>
-        <Move href={`/wallet/?${item.from}`}>{item.from.slice(0, 20)}...</Move>
+        <Move
+          onClick={() => {
+            move(`/wallet/?${item.from}`);
+          }}
+        >
+          {item.from.slice(0, 20)}...
+        </Move>
       </Blue>
 
       <td>→</td>
 
       <Blue>
-        <Move href={`/wallet/?${item.to}`}>{item.to.slice(0, 20)}...</Move>
+        <Move
+          onClick={() => {
+            move(`/wallet/?${item.to}`);
+          }}
+        >
+          {item.to.slice(0, 20)}...
+        </Move>
       </Blue>
 
       <td>{item.value}</td>
@@ -36,9 +60,10 @@ const AllTransaction = ({ item }) => {
   );
 };
 
-const Move = styled.a`
+const Move = styled.div`
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 `;
 
 const Blue = styled.td`

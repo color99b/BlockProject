@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import notFound from "../imgs/notFound.svg";
-
+import { useNavigate } from "react-router";
 const NotFoundComponent = ({ text, type }) => {
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
   return (
     <>
       <NotFound>
@@ -27,7 +31,11 @@ const NotFoundComponent = ({ text, type }) => {
           If you think this is a problem with us, please tell 010-2361-2744.
         </div>
         <div>
-          <Move href="/">
+          <Move
+            onClick={() => {
+              move("/");
+            }}
+          >
             <ButtonHome>Back Home</ButtonHome>
           </Move>
         </div>
@@ -66,11 +74,13 @@ const NotFound = styled.div`
 const Move = styled.a`
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 `;
 
 const ButtonHome = styled.button`
   position: relative;
   color: white;
+  cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
   background-color: rgba(0, 0, 255, 0.3);

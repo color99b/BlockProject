@@ -397,4 +397,15 @@ const find = async(req,res)=>{
 
   무슨 차이인지 모르겠다 아직까지는
 
+5. navigate 과 a 의 차이
+
+- 처음에 아무생각없이 링크 이동할때 a href 를 통해 이동했는데 yarn build 후 build 된 html에서 path를 읽지 못하는 경우가 발생했다.
+  - 해결 : react 의 hook중 하나인 navigate 사용한다.
+  ```js
+  const navigate = useNavigate();
+  const move = (path) => {
+    navigate(path);
+  };
+  ```
+
 ### redux 연습 필수다.
